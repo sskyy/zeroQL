@@ -1,9 +1,7 @@
-var Translator = require('../lib/Translator')
+var Translator = require('../lib/Parser')
 var NodeType = require('../lib/NodeType')
 var ContextType = require('../lib/ContextType')
 var assert = require('assert')
-
-
 
 
 
@@ -47,7 +45,7 @@ describe( 'register separator', function(){
   })
 
   translator.parse(`
-    Todo{
+    Todo {
       [${componentId}:content, detail]
       [${componentId2}: createdBy User(id:1) {
         name,
