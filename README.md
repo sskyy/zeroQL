@@ -47,9 +47,39 @@ User( age:21 ){
 User( age:21 ){
   id,
   name,
-  [static]assigned( content: 'run' ) Task: {
+  assigned static::Task( content: 'run' ): {
     id,
     content
   }
 }
+```
+
+query above will be parsed to :
+
+```
+{
+  type : 'User',
+  attrs : {
+    age :21
+  },
+  unfilledKeys : [],
+  fields : ['id', 'name'],
+  relations : [
+    {
+      name : 'assigned',
+      static : true,
+      reverse : false,
+      target : {
+        type : 'Task',
+        attrs : {
+          content : 'run'
+        },
+        fields : ['id','content']
+        unfilledKeys : [],
+        relations : []
+      }
+    }
+  ]
+}
+
 ```

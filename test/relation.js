@@ -59,7 +59,7 @@ describe('relation', function () {
   it('static relation', function () {
     var parser = new Parser
     var query = `${type} {
-      ${relation} <static>${relationType} {
+      ${relation} static::${relationType} {
         ${fields.join(',')}
       }
     }`
