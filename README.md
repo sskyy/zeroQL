@@ -4,9 +4,9 @@ A graphQL inspired graph database query language.
 
 ## Usage
 
-### Basic
+### 1. Basic
 
-1. Query nodes with certain label :
+#### 1.1 Query nodes with certain label: ####
 
 ```
 User {
@@ -16,7 +16,16 @@ User {
 }
 ```
 
-2. Query nodes with certain attributes :
+Query will be parse to:
+
+```
+{
+  type: 'User',
+  fields : ['id','name','age']
+}
+```
+
+#### 1.2 Query nodes with certain attributes :
 
 ```
 User( age:21 ){
@@ -26,60 +35,119 @@ User( age:21 ){
 }
 ```
 
-### Query Related Data
+Query will be parse to:
 
-1. Query optional related data
+```
+{
+  type: 'User',
+  attrs : {
+    data : {
+      age : 21
+    }
+  },
+  fields : ['id','name','age']
+}
+```
+
+#### 1.3 Query with empty attribute
 
 ```
 User( age:21 ){
   id,
   name,
-  assigned Task : {
+  age
+}
+```
+
+Query will be parse to:
+
+```
+{
+  type: 'User',
+  attrs : {
+    unFilledKeys : ['age']
+  },
+  fields : ['id','name','age']
+}
+```
+
+### 2. Query Related Data
+
+#### 2.1 Query optional related data
+
+```
+User( age:21 ){
+  id,
+  name,
+  created Task : {
     id,
     content
   }
 }
 ```
 
-2. Query related Data with certain attribute
-
-```
-User( age:21 ){
-  id,
-  name,
-  assigned static::Task( content: 'run' ): {
-    id,
-    content
-  }
-}
-```
-
-query above will be parsed to :
+Query will be parse to:
 
 ```
 {
   type : 'User',
   attrs : {
-    age :21
+    data : {
+      age :21
+    }
   },
-  unfilledKeys : [],
   fields : ['id', 'name'],
-  relations : [
-    {
+  relations : {
+    'created Task' : {
+      name : 'created',
+      target : {
+        type : 'Task',
+        fields : ['id','content']
+      }
+    }
+  }
+}
+```
+
+
+#### 2.2 Query related Data with certain attribute
+
+```
+User( age:21 ){
+  id,
+  name,
+  Task assigned( content: 'run' ): {
+    id,
+    content
+  }
+}
+```
+
+Query  will be parsed to :
+
+```
+{
+  type : 'User',
+  attrs : {
+    data : {
+      age :21
+    }
+  },
+  fields : ['id', 'name'],
+  relations : {
+    'Task-assigned' : {
       name : 'assigned',
-      static : true,
-      reverse : false,
+      reverse : true,            //notice, this is a reverse relation
       target : {
         type : 'Task',
         attrs : {
-          content : 'run'
+          data : {
+            content : 'run'
+          }
         },
         fields : ['id','content']
-        unfilledKeys : [],
-        relations : []
       }
     }
-  ]
+  }
 }
-
 ```
