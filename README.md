@@ -1,6 +1,6 @@
 # ZeroQL
 
-A graphQL inspired graph database query language.
+A straightforward graph data query language inspired by GraphQL, designed to meet the need for [Mars](http://github.com/sskyy/mars).
 
 ## Usage
 
